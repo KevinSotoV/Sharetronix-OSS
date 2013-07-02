@@ -82,46 +82,49 @@
 	switch($tab){
 		case 'info':
 					if( !$is_profile_protected ){
-						$dtls = array(
-							'Date Register'=>strftime($this->lang('usr_info_birthdate_dtformat'), $u->reg_date),
-							'Last Login Date'=> strftime($this->lang('usr_info_birthdate_dtformat'), $u->lastlogin_date),
-						);
+					   
+						if( !empty($u->reg_date) ){
+							$dtls[$this->lang('usr_info_aboutme_datereg')] = strftime($this->lang('usr_info_birthdate_dtformat'), $u->reg_date);
+						}
+						if( !empty($u->lastlogin_date) ){
+							$dtls[$this->lang('usr_info_aboutme_datelgn')] = strftime($this->lang('usr_info_birthdate_dtformat'), $u->lastlogin_date);
+						}							
 						if( !empty($u->location) ){
-							$dtls['Location'] = $u->location;
+							$dtls[$this->lang('usr_info_aboutme_location')] = $u->location;
 						}
 						if( !empty($u->position) ){
-							$dtls['Position'] = $u->position;
+							$dtls[$this->lang('usr_prof_we_section_name')] = $u->position;
 						}
 						if( !empty($u->about_me) ){
-							$dtls['About me'] = $u->about_me;
+							$dtls[$this->lang('usr_info_section_aboutme')] = $u->about_me;
 						}
 						if( !empty($u->gender) ){
-							$dtls['Gender'] =  $this->lang('usr_info_aboutme_gender_'.$u->gender);
+							$dtls[$this->lang('usr_info_aboutme_gender')] =  $this->lang('usr_info_aboutme_gender_'.$u->gender);
 						}
 						
 						if($is_admin_or_follows_me || $is_my_profile){
 							$dtls['Email'] = $u->email;
 							
 							if(!empty($u->birthdate) && $u->birthdate!= '0000-00-00' ) {
-								$dtls['Birthdate'] = date('m/d/Y',strtotime($u->birthdate));
+								$dtls[$this->lang('usr_info_aboutme_birthdate')] = date('m/d/Y',strtotime($u->birthdate));
 							}
 							if(!empty($u->position)) {
-								$dtls['Position'] = $u->position;
+								$dtls[$this->lang('usr_prof_we_jobtitle')] = $u->position;
 							}
 							if( isset($udtls->website) && !empty($udtls->website) && is_valid_url($udtls->website) ){
-								$dtls['Website'] = $udtls->website;
+								$dtls[$this->lang('usr_info_aboutme_website')] = $udtls->website;
 							}
 							if( isset($udtls->work_phone) && !empty($udtls->work_phone) ){
-								$dtls['Work phone'] = $udtls->work_phone;
+								$dtls[$this->lang('usr_info_aboutme_wphone')] = $udtls->work_phone;
 							}
 							if( isset($udtls->personal_phone) && !empty($udtls->personal_phone) ){
-								$dtls['Personal phone'] = $udtls->personal_phone;
+								$dtls[$this->lang('usr_info_aboutme_pphone')] = $udtls->personal_phone;
 							}
 						}
 						
 						if( $this->user->is_logged && $this->user->info->is_network_admin ){
-							$dtls['Last Login IP'] = long2ip($u->lastlogin_ip);
-							$dtls['Registration IP'] = long2ip($u->reg_ip);
+							$dtls[$this->lang('usr_profile_lastloginip')] = long2ip($u->lastlogin_ip);
+							$dtls[$this->lang('usr_profile_regip')] = long2ip($u->reg_ip);
 						}
 						
 						$tpl->layout->setVar( 'main_content', $tpl->designer->createTableDetailsBlock( '', $dtls, 'user-details' ) ); unset($dtls);
